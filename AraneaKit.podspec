@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '6.0'
   s.requires_arc = true
 
-  s.source_files = 'AraneaKit', 'AraneaKit/**/*.{h,m,c}'
+  s.source_files = 'AraneaKit', '**/*.{h,m,c}'
   s.public_header_files = 'AraneaKit.h'  
 end

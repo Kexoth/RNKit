@@ -10,6 +10,7 @@
 
 @interface RNAlertView()
 @property (readwrite, copy) void (^block)(NSInteger selectedItemIndex);
+@property (readwrite, copy) void (^inputBlock)(NSString *text);
 @property (readwrite, copy) void (^cancelBlock)(void);
 @end
 
@@ -38,6 +39,22 @@
     [alertView show];
 }
 
++ (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message textFieldText:(NSString *)textFieldText cancelButtonTitle:(NSString *)cancelButtonTitle submitButtonTitle:(NSString *)submitButtonTitle block:(void (^)(NSString *))block cancelBlock:(void (^)(void))cancelBlock
+{
+    RNAlertView *alertView = [[RNAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:cancelButtonTitle otherButtonTitles:submitButtonTitle, nil];
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [[alertView textFieldAtIndex:0] setText:textFieldText];
+    [alertView setDelegate:alertView];
+    
+    if (block)
+        [alertView setInputBlock:block];
+    if (cancelBlock)
+        [alertView setCancelBlock:cancelBlock];
+    
+    [alertView show];
+}
+
+
 #pragma mark - UIAlertViewDelegate Methods
 
 - (void)alertViewCancel:(UIAlertView *)alertView
@@ -52,6 +69,8 @@
         [self cancelBlock]();
     else if (self.block)
         [self block](buttonIndex);
+    else if (self.inputBlock)
+        [self inputBlock]([alertView textFieldAtIndex:0].text);
 }
 
 
